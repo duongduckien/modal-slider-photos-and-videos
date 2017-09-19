@@ -1,0 +1,25 @@
+{
+  "name": "modal-slider-photos-and-videos",
+  "version": "0.0.1",
+  "description": "modal slider photos and video",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duongduckien/modal-slider-photos-and-videos.git"
+  },
+  "keywords": [
+    "modal",
+    "slider",
+    "photos",
+    "videos"
+  ],
+  "author": "duongkien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duongduckien/modal-slider-photos-and-videos/issues"
+  },
+  "homepage": "https://github.com/duongduckien/modal-slider-photos-and-videos#readme"
+}

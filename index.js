@@ -595,60 +595,60 @@ var GalleryModal = (function () {
     GalleryModal.decorators = [
         { type: Component, args: [{
                     selector: 'gallery-modal',
-                    template:   "<ion-content class=\"gallery-modal\" [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" >" + 
-                                    "<button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\">" + 
-                                        "<ion-icon name=\"{{ closeIcon }}\"></ion-icon>" + 
-                                    "</button>" + 
-                                    
-                                    "<div *ngIf=\"type_modal=='photo'\" class=\"image-on-top\" [hidden]=\"sliderLoaded\">" + 
-                                        "<zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image>" + 
-                                    "</div>" + 
-                                    
-                                    "<ion-slides class=\"slider\" #slider *ngIf=\"type_modal=='photo' && photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" >" + 
-                                        "<ion-slide *ngFor=\"let photo of photos;\">" + 
-                                            "<div class=\"avatar-slider\">" +
-                                                "<img src=\"{{ photo.avatar }}\" />" +
-                                                "<span>{{ photo.name }}</span>" +
-                                            "</div>" +
+                    template:   `<ion-content class="gallery-modal" [ngStyle]="modalStyle" (window:resize)="resize($event)" (window:orientationchange)="orientationChange($event)" >` +
+                                    `<button class="close-button" ion-button icon-only (click)="dismiss()">` +
+                                        `<ion-icon name="{{ closeIcon }}"></ion-icon>` +
+                                    `</button>` +
 
-                                            "<zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image>" + 
-                                        
-                                            "<div class=\"footer-slider\">" +
-                                                "<div class=\"footer-slider-content\">" +
-                                                    "<p class=\"footer-slider-content-title\">{{ photo.title }}</p>" +
-                                                    "<p class=\"footer-slider-content-date\">{{ photo.date }}</p>" +
-                                                "</div>" +
-                                            "</div>" +
-                                        "</ion-slide>" + 
-                                    "</ion-slides>" + 
+                                    `<div *ngIf="type_modal=='photo'" class="image-on-top" [hidden]="sliderLoaded">` +
+                                        `<zoomable-image [photo]="initialImage" [resizeTriggerer]="resizeTriggerer" [wrapperWidth]="width" [wrapperHeight]="height" ></zoomable-image>` +
+                                    `</div>` +
 
-                                    "<ion-slides class=\"slider-video\" #slider *ngIf=\"type_modal=='video' && videos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\"  (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" >" +
-                                        "<ion-slide class=\"video-slider\" *ngFor=\"let video of videos;\">" +
-                                            "<div class=\"avatar-slider\">" +
-                                                "<img src=\"{{ video.avatar }}\" />" +
-                                                "<span>{{ video.name }}</span>" +
-                                            "</div>" +
+                                    `<ion-slides class="slider" #slider *ngIf="type_modal=='photo' && photos.length" [initialSlide]="initialSlide" [ngStyle]="slidesStyle" touch-events (ionSlideDrag)="slidesDrag($event)" (panup)="panUpDownEvent($event)" (pandown)="panUpDownEvent($event)" (panend)="panEndEvent($event)" (pancancel)="panEndEvent($event)" >` +
+                                        `<ion-slide *ngFor="let photo of photos;">` +
+                                            `<div class="avatar-slider">` +
+                                                `<img src="{{ photo.avatar }}" />` +
+                                                `<span>{{ photo.name }}</span>` +
+                                            `</div>` +
 
-                                            "<video controls=\"controls\" poster=\"{{ video.poster }}\" preload=\"none\" width=\"{{ width }}\">" +
-                                                "<source src=\"{{ video.url }}\" type=\"video/mp4\"/>" +
-                                            "</video>" +
+                                            `<zoomable-image [photo]="photo" [resizeTriggerer]="resizeTriggerer" [wrapperWidth]="width" [wrapperHeight]="height" [ngClass]="{ 'swiper-no-swiping': sliderDisabled }" (disableScroll)="disableScroll($event)" (enableScroll)="enableScroll($event)" ></zoomable-image>` +
 
-                                            "<div class=\"footer-slider\">" +
-                                                "<div class=\"footer-slider-content\">" +
-                                                    "<p class=\"footer-slider-content-title\">{{ video.title }}</p>" +
-                                                    "<p class=\"footer-slider-content-date\">{{ video.date }}</p>" +
-                                                "</div>" +
-                                            "</div>" +
-                                        "</ion-slide>" +
-                                    "</ion-slides>" +
-                                "</ion-content>",
+                                            `<div class="footer-slider">` +
+                                                `<div class="footer-slider-content">` +
+                                                    `<p class="footer-slider-content-title">{{ photo.title }}</p>` +
+                                                    `<p class="footer-slider-content-date">{{ photo.date }}</p>` +
+                                                `</div>` +
+                                            `</div>` +
+                                        `</ion-slide>` +
+                                    `</ion-slides>` +
+
+                                    `<ion-slides class="slider-video" #slider *ngIf="type_modal=='video' && videos.length" [initialSlide]="initialSlide" [ngStyle]="slidesStyle"  (ionSlideDrag)="slidesDrag($event)" (panup)="panUpDownEvent($event)" (pandown)="panUpDownEvent($event)" (panend)="panEndEvent($event)" (pancancel)="panEndEvent($event)" >` +
+                                        `<ion-slide class="video-slider" *ngFor="let video of videos;">` +
+                                            `<div class="avatar-slider">` +
+                                                `<img src="{{ video.avatar }}" />` +
+                                                `<span>{{ video.name }}</span>` +
+                                            `</div>` +
+
+                                            `<video controls="controls" poster="{{ video.poster }}" preload="none" width="{{ width }}">` +
+                                                `<source src="{{ video.url }}" type="video/mp4"/>` +
+                                            `</video>` +
+
+                                            `<div class="footer-slider">` +
+                                                `<div class="footer-slider-content">` +
+                                                    `<p class="footer-slider-content-title">{{ video.title }}</p>` +
+                                                    `<p class="footer-slider-content-date">{{ video.date }}</p>` +
+                                                `</div>` +
+                                            `</div>` +
+                                        `</ion-slide>` +
+                                    `</ion-slides>` +
+                                `</ion-content>`,
                     styles: [
                         ":host .gallery-modal { position: relative; overflow: hidden; }" +
                         ":host .gallery-modal .close-button { position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; }" +
                         ":host .gallery-modal .close-button.button-ios ion-icon { font-size: 45px; font-weight: bold }" +
                         ":host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; }" +
-                        ":host .gallery-modal .slider-video { position: relative; }" +  
-                        ":host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }" + 
+                        ":host .gallery-modal .slider-video { position: relative; }" +
+                        ":host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }" +
                         ":host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "
                     ],
                 },] },

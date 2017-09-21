@@ -1,6 +1,6 @@
 # modal-slider-photos-and-videos
 
-### Use for ionic 2
+## Use for ionic 2
 
 ## Installation
 ```
@@ -40,7 +40,7 @@ constructor(
 ){}
 ```
 
-Slider photos
+Slider photos:
 ```
 let modal = this.modalCtrl.create(GalleryModal, {
   typeModal: "photo",
@@ -50,7 +50,7 @@ let modal = this.modalCtrl.create(GalleryModal, {
 modal.present();
 ```
 
-Slider videos
+Slider videos:
 ```
 let modal = this.modalCtrl.create(GalleryModal, {
   typeModal: "video",

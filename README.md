@@ -1,5 +1,7 @@
 # modal-slider-photos-and-videos
 
+### Use for ionic 2
+
 ## Installation
 ```
 npm i --save modal-slider-photos-and-videos
@@ -36,7 +38,10 @@ constructor(
     public modalCtrl: ModalController,
     //...
 ){}
+```
 
+Slider photos
+```
 let modal = this.modalCtrl.create(GalleryModal, {
   typeModal: "photo",
   photos: array_photo,
@@ -44,6 +49,17 @@ let modal = this.modalCtrl.create(GalleryModal, {
 });
 modal.present();
 ```
+
+Slider videos
+```
+let modal = this.modalCtrl.create(GalleryModal, {
+  typeModal: "video",
+  videos: array_video,
+  initialSlide: currentIndex
+});
+modal.present();
+```
+
 
 ## Option
 | Name | Type | Value | Description |
@@ -68,10 +84,10 @@ modal.present();
 Example
 ```
 {
-  url: "http://i1.wp.com/inews.gtimg.com/newsapp_match/0/721407790/0",
-  avatar: "http://a0.att.hudong.com/80/38/31300543422791149371386090037_950.jpg",
-  name: "Bật Mã Ôn",
-  title: "Review vườn đào ngọc hoàng",
+  url: "http://example.com/images/photo_1.jpg",
+  avatar: "http://example.com/avatar/david.jpg",
+  name: "David Beckham",
+  title: "Goal Goal!",
   date: "3 months ago"
 }
 ```
@@ -91,10 +107,10 @@ Example
 ```
 {
   url: "http://abc.com/media/video.mp4",
-  poster: "http://i1.wp.com/inews.gtimg.com/newsapp_match/0/721407790/0",
-  avatar: "http://a0.att.hudong.com/80/38/31300543422791149371386090037_950.jpg",
-  name: "Bật Mã Ôn",
-  title: "Review vườn đào ngọc hoàng",
+  poster: "http://example.com/poster/juventus.jpg",
+  avatar: "http://example.com/avatar/buffon.jpg",
+  name: "Buffon",
+  title: "Save save!",
   date: "3 months ago"
 }
 ```

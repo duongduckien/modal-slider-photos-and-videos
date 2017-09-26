@@ -645,14 +645,16 @@ var GalleryModal = (function () {
                         :host .gallery-modal .close-button.button-ios ion-icon  { font-size: 45px; font-weight: bold }
                         :host .gallery-modal /deep/ .slide-zoom                 { position: relative; height: 100%; }
                         :host .gallery-modal                                    { position: relative; }
+                        :host .gallery-modal zoomable-image                     { height: calc(100vh - 140px); }
+                        :host .gallery-modal /deep/ fitted-image                { position: absolute; top: 50%; left: 0; width: 100%; transform: translate(0px, -55%) !important;}
                         :host .gallery-modal .image-on-top                      { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
-                        :host .gallery-modal .avatar-slider-content             { text-align: left; padding: 15px; overflow: hidden; }
+                        :host .gallery-modal .avatar-slider-content             { text-align: left; padding: 15px; overflow: hidden; min-height: 80px; }
                         :host .gallery-modal .avatar-slider img,
                         :host .gallery-modal .avatar-slider span                { display: block; float: left; }
-                        :host .gallery-modal .avatar-slider img                 { width: 50px; height: 50px; border-radius: 4px; }
+                        :host .gallery-modal .avatar-slider img                 { width: 50px; height: 50px; border-radius: 2px; }
                         :host .gallery-modal .avatar-slider span                { font-size: 15px; margin: 3px 0 0 10px; }
                         :host .gallery-modal /deep/ .slide-zoom                 { display: flex; height: 100%; flex-direction: column; justify-content: space-between; }
-                        :host .gallery-modal .footer-slider .footer-content     { border-top: 1px solid rgba(244, 244, 244, 0.3); padding: 10px 15px; }
+                        :host .gallery-modal .footer-slider .footer-content     { border-top: 1px solid rgba(244, 244, 244, 0.3); padding: 10px 15px; min-height: 60px; }
                         :host .gallery-modal .footer-slider p                   { margin: 0 0 5px 0; font-size: 13px; text-align: left; min-height: 15px;}
                         :host .gallery-modal .footer-slider p:last-child        { margin: 0; }
                     `]

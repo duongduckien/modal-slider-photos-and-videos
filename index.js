@@ -605,14 +605,16 @@ var GalleryModal = (function () {
                                     <ion-slides *ngIf="type_modal=='photo' && photos.length" class="slider" #slider [initialSlide]="initialSlide" [ngStyle]="slidesStyle" touch-events (ionSlideDrag)="slidesDrag($event)" (panup)="panUpDownEvent($event)" (pandown)="panUpDownEvent($event)" (panend)="panEndEvent($event)" (pancancel)="panEndEvent($event)" >
                                         <ion-slide *ngFor="let photo of photos;">
                                             <div class="avatar-slider">
-                                                <img src="{{ photo.avatar }}" />
-                                                <span>{{ photo.name }}</span>
+                                                <div class="avatar-slider-content" *ngIf="photo.avatar || photo.name">
+                                                    <img src="{{ photo.avatar }}" *ngIf="photo.avatar" />
+                                                    <span *ngIf="photo.name">{{ photo.name }}</span>
+                                                </div>
                                             </div>
                                             <zoomable-image [photo]="photo" [resizeTriggerer]="resizeTriggerer" [wrapperWidth]="width" [wrapperHeight]="height" [ngClass]="{ 'swiper-no-swiping': sliderDisabled }" (disableScroll)="disableScroll($event)" (enableScroll)="enableScroll($event)" ></zoomable-image>
                                             <div class="footer-slider">
-                                                <div class="footer-content">
-                                                    <p class="title">{{ photo.title }}</p>
-                                                    <p class="date">{{ photo.date }}</p>
+                                                <div class="footer-content" *ngIf="photo.avatar || photo.avatar">
+                                                    <p class="title" *ngIf="photo.title">{{ photo.title }}</p>
+                                                    <p class="date" *ngIf="photo.date">{{ photo.date }}</p>
                                                 </div>
                                             </div>
                                         </ion-slide>
@@ -620,16 +622,18 @@ var GalleryModal = (function () {
                                     <ion-slides *ngIf="type_modal=='video' && videos.length" class="slider-video" #slider [initialSlide]="initialSlide" [ngStyle]="slidesStyle"  (ionSlideDrag)="slidesDrag($event)" (panup)="panUpDownEvent($event)" (pandown)="panUpDownEvent($event)" (panend)="panEndEvent($event)" (pancancel)="panEndEvent($event)" >
                                         <ion-slide class="video-slider" *ngFor="let video of videos;">
                                             <div class="avatar-slider">
-                                                <img src="{{ video.avatar }}" />
-                                                <span>{{ video.name }}</span>
+                                                <div class="avatar-slider-content" *ngIf="video.avatar || video.name">
+                                                    <img src="{{ video.avatar }}" *ngIf="video.avatar" />
+                                                    <span *ngIf="video.name">{{ video.name }}</span>
+                                                </div>
                                             </div>
                                             <video width="100%" height="250" controls poster="{{ video.poster }}" preload="none" width="{{ width }}">
                                                 <source src="{{ video.url }}" type="video/mp4"/>
                                             </video>
                                             <div class="footer-slider">
-                                                <div class="footer-content">
-                                                    <p class="title">{{ video.title }}</p>
-                                                    <p class="date">{{ video.date }}</p>
+                                                <div class="footer-content" *ngIf="video.title || video.date">
+                                                    <p class="title" *ngIf="video.title">{{ video.title }}</p>
+                                                    <p class="date" *ngIf="video.date">{{ video.date }}</p>
                                                 </div>
                                             </div>
                                         </ion-slide>
@@ -639,18 +643,16 @@ var GalleryModal = (function () {
                         :host .gallery-modal                                    { position: relative; overflow: hidden; color: #f4f4f4; }
                         :host .gallery-modal .close-button                      { display: none; position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; }
                         :host .gallery-modal .close-button.button-ios ion-icon  { font-size: 45px; font-weight: bold }
-                        :host .gallery-modal .slider /deep/ .slide-zoom         { position: relative; height: 100%; }
-                        :host .gallery-modal .slider-video                      { position: relative; }
+                        :host .gallery-modal /deep/ .slide-zoom                 { position: relative; height: 100%; }
+                        :host .gallery-modal                                    { position: relative; }
                         :host .gallery-modal .image-on-top                      { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
-                        :host .gallery-modal .image-on-top fitted-image         { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-                        :host .gallery-modal .slider-video .avatar-slider       { text-align: left; padding: 0 15px; }
-                        :host .gallery-modal .slider-video .avatar-slider img,
-                        :host .gallery-modal .slider-video .avatar-slider span  { display: block; float: left; }
-                        :host .gallery-modal .slider-video .avatar-slider img   { width: 50px; height: 50px; }
-                        :host .gallery-modal .slider-video .avatar-slider span  { font-size: 15px; margin: 3px 0 0 5px; }
-                        :host .gallery-modal .slider-video .slide-zoom          { height: 100%; padding: 70px 0 10px 0; display: flex; flex-direction: column; justify-content: space-between; }
-                        :host .gallery-modal .footer-slider                     { border-top: 1px solid rgba(244, 244, 244, 0.3); padding-top: 10px; }
-                        :host .gallery-modal .footer-slider .footer-content     { padding: 0 15px; }
+                        :host .gallery-modal .avatar-slider-content             { text-align: left; padding: 15px; overflow: hidden; }
+                        :host .gallery-modal .avatar-slider img,
+                        :host .gallery-modal .avatar-slider span                { display: block; float: left; }
+                        :host .gallery-modal .avatar-slider img                 { width: 50px; height: 50px; border-radius: 4px; }
+                        :host .gallery-modal .avatar-slider span                { font-size: 15px; margin: 3px 0 0 10px; }
+                        :host .gallery-modal /deep/ .slide-zoom                 { display: flex; height: 100%; flex-direction: column; justify-content: space-between; }
+                        :host .gallery-modal .footer-slider .footer-content     { border-top: 1px solid rgba(244, 244, 244, 0.3); padding: 10px 15px; }
                         :host .gallery-modal .footer-slider p                   { margin: 0 0 5px 0; font-size: 13px; text-align: left; min-height: 15px;}
                         :host .gallery-modal .footer-slider p:last-child        { margin: 0; }
                     `]

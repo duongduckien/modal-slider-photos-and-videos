@@ -4,6 +4,7 @@ import { Gesture, IonicModule, NavParams, Platform, ViewController } from 'ionic
 import { DomSanitizer, HammerGestureConfig } from '@angular/platform-browser';
 import { Subject } from 'rxjs/Subject';
 
+
 var FittedImage = (function () {
     function FittedImage() {
         this.onImageResized = new EventEmitter();

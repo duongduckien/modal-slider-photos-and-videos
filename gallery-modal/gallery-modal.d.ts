@@ -12,6 +12,8 @@ export declare class GalleryModal implements OnInit {
     private initialImage;
     photos: Photo[];
     videos: Video[];
+    private check_platform;
+    private video_event;
     private typeModal;
     private sliderDisabled;
     private initialSlide;
@@ -71,4 +73,8 @@ export declare class GalleryModal implements OnInit {
      * @param  {Hammer.Event} event
      */
     private panEndEvent(event);
+
+    private tapEvent(event);
+
+    private swipeEvent();
 }

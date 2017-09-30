@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Gesture, IonicModule, NavParams, Platform, ViewController } from 'ionic-angular';
 import { DomSanitizer, HammerGestureConfig } from '@angular/platform-browser';
 import { Subject } from 'rxjs/Subject';
-
+import * as $ from 'jquery';
 
 var FittedImage = (function () {
     function FittedImage() {
@@ -346,16 +346,18 @@ var ZoomableImage = (function () {
     ZoomableImage.prototype.displayScale = function () {
         var /** @type {?} */ realImageWidth = this.imageWidth * this.scale;
         var /** @type {?} */ realImageHeight = this.imageHeight * this.scale;
-        this.position.x = Math.max((this.wrapperWidth - realImageWidth) / (2 * this.scale), 0);
-        this.position.y = Math.max((this.wrapperHeight - realImageHeight) / (2 * this.scale), 0);
-        this.imageStyle.transform = "scale(" + this.scale + ") translate(" + this.position.x + "px, " + this.position.y + "px)";
-        this.containerStyle.width = realImageWidth + "px";
-        this.containerStyle.height = realImageHeight + "px";
-        this.scroll.x = this.centerRatio.x * realImageWidth - this.centerStart.x;
-        this.scroll.y = this.centerRatio.y * realImageWidth - this.centerStart.y;
-        // Set scroll of the ion scroll
-        this.scrollableElement.scrollLeft = this.scroll.x;
-        this.scrollableElement.scrollTop = this.scroll.y;
+        if (realImageWidth >= this.imageWidth && realImageHeight >= this.imageHeight) {
+            this.position.x = Math.max((this.wrapperWidth - realImageWidth) / (2 * this.scale), 0);
+            this.position.y = Math.max((this.wrapperHeight - realImageHeight) / (2 * this.scale), 0);
+            this.imageStyle.transform = "scale(" + this.scale + ") translate(" + this.position.x + "px, " + this.position.y + "px)";
+            this.containerStyle.width = realImageWidth + "px";
+            this.containerStyle.height = realImageHeight + "px";
+            this.scroll.x = this.centerRatio.x * realImageWidth - this.centerStart.x;
+            this.scroll.y = this.centerRatio.y * realImageWidth - this.centerStart.y;
+            // Set scroll of the ion scroll
+            this.scrollableElement.scrollLeft = this.scroll.x;
+            this.scrollableElement.scrollTop = this.scroll.y;
+        }
     };
     /**
      * Check wether to disable or enable scroll and then call the events
@@ -392,7 +394,7 @@ var ZoomableImage = (function () {
         { type: Component, args: [{
                     selector: 'zoomable-image',
                     template: "<ion-scroll #ionScrollContainer scrollX=\"true\" scrollY=\"true\" zoom=\"false\"> <div class=\"image\" touch-events direction=\"y\" (pinch)=\"pinchEvent($event)\" (pinchstart)=\"pinchStartEvent($event)\" (pinchend)=\"pinchEndEvent($event)\" (doubletap)=\"doubleTapEvent($event)\" (onpan)=\"panEvent($event)\" [ngStyle]=\"containerStyle\" > <fitted-image [photo]=\"photo\" [ngStyle]=\"imageStyle\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"wrapperWidth\" [wrapperHeight]=\"wrapperHeight\" (onImageResized)=\"handleImageResized($event)\" ></fitted-image> </div> </ion-scroll> <div class=\"fitted-image-title\" *ngIf=\"photo.title\" >{{ photo.title }}</div> ",
-                    styles: [":host { display: block; position: relative; width: 100%; height: 100%; } :host ion-scroll { width: 100%; height: 100%; text-align: left; white-space: nowrap; } :host ion-scroll /deep/ .scroll-zoom-wrapper { width: 100%; height: 100%; } :host ion-scroll .image { display: inline-block; position: relative; min-width: 100%; min-height: 100%; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host ion-scroll .image fitted-image { transform-origin: left top; pointer-events: none; } :host .fitted-image-title { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: white; font-size: 14px; line-height: 18px; text-align: left; z-index: 1; } "],
+                    styles: [":host { display: block; position: relative; width: 100%; height: 100%; } :host ion-scroll { width: 100%; height: 100%; text-align: left; white-space: nowrap; } :host ion-scroll /deep/ .scroll-zoom-wrapper { width: 100%; height: 100%; } :host ion-scroll .image { display: inline-block; position: relative; min-width: 100%; min-height: 100%; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host ion-scroll .image fitted-image { transform-origin: left top; pointer-events: none; } :host .fitted-image-title { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: white; font-size: 14px; line-height: 18px; text-align: center; z-index: 1; } "],
                 },] },
     ];
     /**
@@ -452,6 +454,18 @@ var GalleryModal = (function () {
         this.closeIcon = params.get('closeIcon') || 'close';
         this.initialSlide = params.get('initialSlide') || 0;
         this.initialImage = this.photos[this.initialSlide] || {};
+
+        this.video_event = [];
+        for(let n=0; n<this.videos.length; n++) {
+            this.video_event.push('stop');
+        }
+
+        this.check_platform = true;
+
+        if (this.platform.is('ios')) {
+            this.check_platform = false;
+        }
+
     }
     /**
      * @return {?}
@@ -593,10 +607,40 @@ var GalleryModal = (function () {
             this.modalStyle.backgroundColor = 'rgba(0, 0, 0, 1)';
         }
     };
+
+    GalleryModal.prototype.tapEvent = function (index) {
+
+        if (this.video_event[index] == 'play') {
+            $('video').get(index).pause();
+            this.video_event[index] = 'stop';
+            $('.icon_play').show();
+        }else {
+            $('video').get(index).play();
+            this.video_event[index] = 'play';
+            $('.icon_play').hide();
+        }
+
+    };
+
+    GalleryModal.prototype.swipeEvent = function () {
+
+        if (this.video_event.length > 0) {
+            $('.icon_play').show();
+
+            for (let j=0; j<this.video_event.length; j++) {
+                if (this.video_event[j] == 'play') {
+                    $('video').get(j).pause();
+                    this.video_event[j] = 'stop';
+                }
+            }
+        }
+
+    }
+
     GalleryModal.decorators = [
         { type: Component, args: [{
                     selector: 'gallery-modal',
-                    template:   `<ion-content class="gallery-modal" [ngStyle]="modalStyle" (window:resize)="resize($event)" (window:orientationchange)="orientationChange($event)" >
+                    template:   `<ion-content class="gallery-modal" [ngStyle]="modalStyle" (window:resize)="resize($event)" (window:orientationchange)="orientationChange($event)" (swipe)="swipeEvent()" >
                                     <button class="close-button" ion-button icon-only (click)="dismiss()">
                                         <ion-icon name="{{ closeIcon }}"></ion-icon>
                                     </button>
@@ -620,17 +664,23 @@ var GalleryModal = (function () {
                                             </div>
                                         </ion-slide>
                                     </ion-slides>
+
                                     <ion-slides *ngIf="type_modal=='video' && videos.length" class="slider-video" #slider [initialSlide]="initialSlide" [ngStyle]="slidesStyle"  (ionSlideDrag)="slidesDrag($event)" (panup)="panUpDownEvent($event)" (pandown)="panUpDownEvent($event)" (panend)="panEndEvent($event)" (pancancel)="panEndEvent($event)" >
-                                        <ion-slide class="video-slider" *ngFor="let video of videos;">
+                                        <ion-slide class="video-slider" *ngFor="let video of videos; let i = index;">
                                             <div class="avatar-slider">
                                                 <div class="avatar-slider-content" *ngIf="video.avatar || video.name">
                                                     <img src="{{ video.avatar }}" *ngIf="video.avatar" />
                                                     <span *ngIf="video.name">{{ video.name }}</span>
                                                 </div>
                                             </div>
-                                            <video width="100%" height="250" controls poster="{{ video.poster }}" preload="none" width="{{ width }}">
-                                                <source src="{{ video.url }}" type="video/mp4"/>
-                                            </video>
+                                            <div class="wrapper">
+                                                <video width="100%" height="250" poster="{{ video.poster }}" preload="none" width="{{ width }}" (tap)="tapEvent(i)">
+                                                    <source src="{{ video.url }}" type="video/mp4"/>
+                                                </video>
+                                            </div>
+                                            <div *ngIf="check_platform">
+                                                <div class="icon_play" (tap)="tapEvent(i)"></div>
+                                            </div>
                                             <div class="footer-slider">
                                                 <div class="footer-content" *ngIf="video.title || video.date">
                                                     <p class="title" *ngIf="video.title">{{ video.title }}</p>
@@ -644,21 +694,32 @@ var GalleryModal = (function () {
                         :host .gallery-modal                                    { position: relative; overflow: hidden; color: #f4f4f4; }
                         :host .gallery-modal .close-button                      { display: none; position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; }
                         :host .gallery-modal .close-button.button-ios ion-icon  { font-size: 45px; font-weight: bold }
-                        :host .gallery-modal /deep/ .slide-zoom                 { position: relative; height: 100%; }
-                        :host .gallery-modal                                    { position: relative; }
-                        :host .gallery-modal zoomable-image                     { height: calc(100vh - 140px); }
-                        :host .gallery-modal /deep/ fitted-image                { position: absolute; top: 50%; left: 0; width: 100%; transform: translate(0px, -50%) !important;}
-                        :host .gallery-modal /deep/ fitted-image img            { transition: all 0.5s ease; }
+                        :host .gallery-modal .slider /deep/ .slide-zoom         { position: relative; height: 100%; }
+                        :host .gallery-modal .slider-video                      { position: relative; }
                         :host .gallery-modal .image-on-top                      { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
-                        :host .gallery-modal .avatar-slider-content             { text-align: left; padding: 15px; overflow: hidden; min-height: 80px; }
+                        :host .gallery-modal .image-on-top fitted-image         { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+                        :host .gallery-modal .slider-video .avatar-slider       { text-align: left; padding: 0 15px; }
+                        :host .gallery-modal .slider-video .avatar-slider img,
+                        :host .gallery-modal .slider-video .avatar-slider span  { display: block; float: left; }
+                        :host .gallery-modal .slider-video .avatar-slider img   { width: 50px; height: 50px; }
+                        :host .gallery-modal .slider-video .avatar-slider span  { font-size: 15px; margin: 3px 0 0 5px; }
+                        :host .gallery-modal .slider-video .slide-zoom          { height: 100%; padding: 70px 0 10px 0; display: flex; flex-direction: column; justify-content: space-between; }                        :host .gallery-modal .footer-slider                     { border-top: 1px solid rgba(244, 244, 244, 0.3); padding-top: 10px; }
+                        :host .gallery-modal .footer-slider .footer-content     { padding: 0 15px; }
+                        :host .gallery-modal .footer-slider p                   { margin: 0 0 5px 0; font-size: 13px; text-align: left; min-height: 15px;}
+                        :host .gallery-modal .footer-slider p:last-child        { margin: 0; }
+                        :host .wrapper                                          { position:relative; }
+                        :host .icon_play                                        { background-image:url(http://api.jreviews.qa.pgtest.co:3007/images/icon_play.png); background-repeat:no-repeat; width:15%; height:15%; position:absolute; left:0%; right:0%; top:0%; bottom:0%; margin:auto; background-size:contain; background-position: center; }
+                        :host .avatar-slider-content                            { text-align: left; padding: 15px; overflow: hidden; min-height: 80px; }
                         :host .gallery-modal .avatar-slider img,
                         :host .gallery-modal .avatar-slider span                { display: block; float: left; }
                         :host .gallery-modal .avatar-slider img                 { width: 50px; height: 50px; border-radius: 2px; }
                         :host .gallery-modal .avatar-slider span                { font-size: 15px; margin: 3px 0 0 10px; }
                         :host .gallery-modal /deep/ .slide-zoom                 { display: flex; height: 100%; flex-direction: column; justify-content: space-between; }
-                        :host .gallery-modal .footer-slider .footer-content     { border-top: 1px solid rgba(244, 244, 244, 0.3); padding: 10px 15px; min-height: 60px; }
+                        :host .gallery-modal .footer-slider .footer-content     { padding: 10px 15px; min-height: 60px; }
                         :host .gallery-modal .footer-slider p                   { margin: 0 0 5px 0; font-size: 13px; text-align: left; min-height: 15px;}
                         :host .gallery-modal .footer-slider p:last-child        { margin: 0; }
+                        :host .gallery-modal zoomable-image                     { height: calc(100vh - 160px); }
+                        :host .gallery-modal /deep/ .slide-zoom                 { position: relative; height: 100%; }
                     `]
                 },] },
     ];
